@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthTrack Pro | BMI Calculator</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="glass-container">
+      <!-- Calculator Panel -->
+      <div class="calculator-panel">
+        <div class="app-header">
+          <div class="app-icon">
+            <i class="fas fa-heartbeat"></i>
+          </div>
+          <h1>HealthTrack<span>Pro</span></h1>
+          <p class="app-tagline">Your personal health assistant</p>
+        </div>
+
+        <div class="calculator-card">
+          <h2><i class="fas fa-calculator"></i> BMI Calculator</h2>
+
+          <form method="POST" action="{{ url_for('index') }}">
+            <div class="input-group">
+              <label for="height"
+                ><i class="fas fa-ruler-vertical"></i> Height (cm)</label
+              >
+              <div class="input-with-icon">
+                <input
+                  type="number"
+                  id="height"
+                  name="height"
+                  step="0.1"
+                  required
+                />
+                <span class="input-icon">cm</span>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label for="weight"
+                ><i class="fas fa-weight"></i> Weight (kg)</label
+              >
+              <div class="input-with-icon">
+                <input
+                  type="number"
+                  id="weight"
+                  name="weight"
+                  step="0.1"
+                  required
+                />
+                <span class="input-icon">kg</span>
+              </div>
+            </div>
+
+            <div class="input-group">
+              <label><i class="fas fa-venus-mars"></i> Gender</label>
+              <div class="gender-selector">
+                <label class="gender-option male-option">
+                  <input type="radio" name="gender" value="male" checked />
+                  <div class="gender-content">
+                    <i class="fas fa-mars"></i>
+                    <span>Male</span>
+                  </div>
+                </label>
+                <label class="gender-option female-option">
+                  <input type="radio" name="gender" value="female" />
+                  <div class="gender-content">
+                    <i class="fas fa-venus"></i>
+                    <span>Female</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <button type="submit" class="glow-button">
+              <i class="fas fa-calculator"></i> Calculate BMI
+            </button>
+          </form>
+
+          {% if bmi %}
+          <div class="result-display">
+            <div class="bmi-gauge">
+              <div class="gauge-background">
+                <div
+                  class="gauge-fill"
+                  style="--bmi-percent: {{ (min(max(bmi,15),40)-15)/25*100 }}%"
+                ></div>
+              </div>
+              <div
+                class="gauge-marker"
+                style="left: {{ (min(max(bmi,15),40)-15)/25*100 }}%"
+              >
+                <div class="marker-value">{{ "%.1f"|format(bmi) }}</div>
+              </div>
+              <div class="gauge-labels">
+                <span>15</span>
+                <span>20</span>
+                <span>25</span>
+                <span>30</span>
+                <span>35</span>
+                <span>40</span>
+              </div>
+            </div>
+
+            <div class="result-details">
+              <div
+                class="result-category {{ bmi_category.lower().replace(' ', '-') }}"
+              >
+                <h3>{{ bmi_category }}</h3>
+                <p>{{ bmi_message }}</p>
+              </div>
+            </div>
+          </div>
+          {% endif %} {% if error %}
+          <div class="error-message">{{ error }}</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Info Panel -->
+      <div class="info-panel">
+        <div class="info-card">
+          <h2><i class="fas fa-chart-line"></i> BMI Analysis</h2>
+          <div class="bmi-chart-container">
+            <img
+              src="{{ url_for('static', filename='images/usz-bmi-calculator-group.jpg') }}"
+              alt="BMI Chart"
+              class="bmi-chart"
+            />
+            <div class="chart-legend">
+              <div class="legend-item underweight">
+                <div class="legend-color"></div>
+                <span>Underweight (&lt;18.5)</span>
+              </div>
+              <div class="legend-item normal">
+                <div class="legend-color"></div>
+                <span>Normal (18.5-24.9)</span>
+              </div>
+              <div class="legend-item overweight">
+                <div class="legend-color"></div>
+                <span>Overweight (25-29.9)</span>
+              </div>
+              <div class="legend-item obese">
+                <div class="legend-color"></div>
+                <span>Obese (30+)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
